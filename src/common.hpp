@@ -2,9 +2,7 @@
 #define _SSH_COMMON_HPP
 
 #include <boost/shared_ptr.hpp>
-#include <libssh/libssh.h>
 #include <stdexcept>
-#include <string>
 
 class Session;
 class Channel;
