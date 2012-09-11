@@ -23,7 +23,7 @@ std::string ExecResult::next() {
         return std::string("");
     }
 
-    char buffer[256];
+    char buffer[10];
     int nbytes = ssh_channel_read(channel->get_c_channel(), buffer, sizeof(buffer), 0);
 
     if (nbytes > 0) {
