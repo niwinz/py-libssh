@@ -1,7 +1,11 @@
-
 import _pyssh
 
 class Result(object):
+    """
+    Python wrapper of ExecResult
+    with iteration support.
+    """
+
     def __init__(self, _result):
         self._result = _result
 
@@ -26,7 +30,12 @@ class Result(object):
     def is_finished(self):
         return self._result.is_finished
 
+
 class Session(object):
+    """
+    Python wrapper for C++ Session.
+    """
+
     def __init__(self, _session):
         self._session = _session
 
