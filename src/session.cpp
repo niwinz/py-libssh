@@ -1,7 +1,7 @@
 #include <cstdio>
 #include "common.hpp"
-#include "channel.hpp"
 #include "session.hpp"
+#include "channel.hpp"
 #include "result.hpp"
 
 

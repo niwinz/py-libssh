@@ -4,6 +4,7 @@
 
 #include "common.hpp"
 #include "session.hpp"
+#include "channel.hpp"
 #include "result.hpp"
 
 namespace py = boost::python;
