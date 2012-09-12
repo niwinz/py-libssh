@@ -1,7 +1,7 @@
 all: pyssh
 
-CXX=g++ -std=c++11 -fPIC -I /usr/include/python3.2mu/ -O3
-LDFLAGS=-l ssh -l boost_python3 -shared
+CXX=clang++ -std=c++11 -fPIC -I /usr/include/python3.2mu/ -O3
+LDFLAGS=-l ssh -l boost_python3 -l boost_filesystem -shared
 
 # python2
 #CXX=g++ -std=c++11 -fPIC -I /usr/include/python2.7/ -O3

@@ -1,11 +1,13 @@
 #include <cstdio>
 #include <iostream>
+#include <fstream>
 #include <cstring>
 
 #include "sftp.hpp"
 #include "ssh.hpp"
 
 namespace pyssh {
+namespace fs = boost::filesystem;
 
 SftpSession::SftpSession(Session *session) {
     this->session = session;
@@ -49,6 +51,43 @@ SftpSession::open_for_write(const std::string &path) {
     return new SftpWFile(path, this);
 }
 
+void
+SftpSession::put(const std::string &_path, const std::string &remote_path) {
+    fs::path p(_path);
+    if (!fs::exists(p) or !fs::is_regular_file(p)) {
+        throw std::runtime_error("Incorrect or not existent file");
+    }
+
+    fs::ifstream file(p, std::ios::in|std::ios::binary|std::ios::ate);
+    if (!file.is_open()) {
+        throw std::runtime_error("Cannot open file");
+    }
+
+    int buffer_size = 10;
+    int size = (int) file.tellg();
+
+    file.seekg (0, std::ios::beg);
+
+    SftpWFile *sftp_file = new SftpWFile(remote_path, this);
+
+    while (size > 0) {
+        size = size - buffer_size;
+        int get_size;
+
+        if (size >= 0) get_size = buffer_size;
+        else get_size = buffer_size + size;
+
+        char *memblock = new char[get_size];
+        file.read(memblock, get_size);
+
+        sftp_file->write(memblock, get_size);
+        delete[] memblock;
+    }
+
+    file.close();
+    sftp_file->close();
+    delete sftp_file;
+}
 
 /******** Files *********/
 
@@ -77,6 +116,15 @@ SftpWFile::~SftpWFile() {
 void
 SftpWFile::write(const char *data) {
     int length = std::strlen(data);
+    int nwritten = sftp_write(this->file, data, length);
+
+    if (nwritten != length) {
+        throw std::runtime_error("Can't write on file");
+    }
+}
+
+void
+SftpWFile::write(const char *data, int length) {
     int nwritten = sftp_write(this->file, data, length);
 
     if (nwritten != length) {

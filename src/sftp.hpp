@@ -4,6 +4,8 @@
 #include <libssh/sftp.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <boost/filesystem.hpp>
+#include <boost/filesystem/fstream.hpp>
 
 namespace pyssh {
 
@@ -15,9 +17,14 @@ public:
     SftpSession(Session *session);
     ~SftpSession();
 
-    void mkdir(const std::string &path);
+    void mkdir(const std::string &);
+    void put(const std::string &, const std::string &);
+
+    //bool exists(const std::string &);
+    //bool is_file(const std::string &);
+    //bool is_directory(const std::string &);
     //void remove(const std::string &path);
-    SftpWFile* open_for_write(const std::string &path);
+    SftpWFile* open_for_write(const std::string &);
 
     sftp_session get_c_sftp_session();
 
@@ -25,6 +32,8 @@ private:
     sftp_session c_sftp_session = NULL;
     Session *session;
 };
+
+
 
 
 #endif
@@ -38,6 +47,7 @@ public:
     ~SftpWFile();
 
     void write(const char *data);
+    void write(const char *data, int length);
     void close();
 
 private:
