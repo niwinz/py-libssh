@@ -2,6 +2,8 @@
 #include <stdexcept>
 #include <string>
 
+namespace pyssh {
+
 #ifndef _SSH_SESSION_HPP
 #define _SSH_SESSION_HPP
 
@@ -80,3 +82,5 @@ private:
 };
 
 #endif
+
+} // End namespace

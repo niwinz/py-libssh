@@ -4,6 +4,8 @@
 #include <iostream>
 #include "ssh.hpp"
 
+namespace pyssh {
+
 Session::Session(const std::string &hostname, const int &port) {
     this->hostname = hostname;
     this->port = port;
@@ -127,10 +129,10 @@ Result::~Result() {
 std::string
 Result::next() {
     if (this->finished) {
-        return std::string(u8"");
+        return std::string("");
     }
 
-    char buffer[10];
+    char buffer[1024];
     int nbytes = ssh_channel_read(channel->get_c_channel(), buffer, sizeof(buffer), 0);
 
     if (nbytes > 0) {
@@ -140,7 +142,7 @@ Result::next() {
 
         this->finished = true;
         this->return_code = ssh_channel_get_exit_status(channel->get_c_channel());
-        return std::string(u8"");
+        return std::string("");
     }
 }
 
@@ -153,3 +155,5 @@ bool
 Result::is_finished() {
     return this->finished;
 }
+
+} // End namespace

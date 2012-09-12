@@ -1,3 +1,4 @@
+from __future__ import print_function, unicode_literals
 import _pyssh
 
 class Result(object):
@@ -29,6 +30,9 @@ class Result(object):
     @property
     def is_finished(self):
         return self._result.is_finished
+
+    def next(self):
+        return self.__next__()
 
 
 class Session(object):

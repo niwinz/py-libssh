@@ -1,17 +1,21 @@
 all: pyssh
 
-CC=clang++ -std=c++11 -fPIC -I /usr/include/python3.2mu/ -O3
-LDFLAGS=-l ssh
+CXX=g++ -std=c++11 -fPIC -I /usr/include/python3.2mu/ -O3
+LDFLAGS=-l ssh -l boost_python3 -shared
 
-PYTHON_LDFLAGS=-l boost_python3 -shared
+# python2
+#CXX=g++ -std=c++11 -fPIC -I /usr/include/python2.7/ -O3
+#LDFLAGS=-l ssh -l boost_python -shared
 
 objects:
-	$(CC) -c -o ssh.o ssh.cpp
-	$(CC) -c -o pyssh.o pyssh.cpp
+	mkdir -p .build
+	$(CXX) -c -o .build/ssh.o ssh.cpp
+	$(CXX) -c -o .build/sftp.o sftp.cpp
+	$(CXX) -c -o .build/pyssh.o pyssh.cpp
 
 pyssh: objects
-	$(CC) $(LDFLAGS) $(PYTHON_LDFLAGS) -o _pyssh.so ssh.o pyssh.o
+	$(CXX) $(LDFLAGS) -o _pyssh.so .build/ssh.o .build/sftp.o .build/pyssh.o
 
 clean:
-	rm *.o
+	rm -rf .build
 	rm _pyssh.so
