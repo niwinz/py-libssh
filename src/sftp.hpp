@@ -7,6 +7,8 @@
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
 
+#include "bytes.hpp"
+
 namespace pyssh {
 
 class Session;
@@ -48,6 +50,7 @@ public:
 
     void write(const char *data);
     void write(const char *data, int length);
+    void write(const Bytes &data);
     void close();
 
 private:

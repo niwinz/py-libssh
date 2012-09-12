@@ -116,11 +116,7 @@ SftpWFile::~SftpWFile() {
 void
 SftpWFile::write(const char *data) {
     int length = std::strlen(data);
-    int nwritten = sftp_write(this->file, data, length);
-
-    if (nwritten != length) {
-        throw std::runtime_error("Can't write on file");
-    }
+    this->write(data, length);
 }
 
 void
@@ -130,6 +126,11 @@ SftpWFile::write(const char *data, int length) {
     if (nwritten != length) {
         throw std::runtime_error("Can't write on file");
     }
+}
+
+void
+SftpWFile::write(const Bytes &data) {
+    this->write(data.c_str(), data.size());
 }
 
 void
