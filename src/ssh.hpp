@@ -7,6 +7,7 @@ namespace pyssh {
 #ifndef _SSH_SESSION_HPP
 #define _SSH_SESSION_HPP
 
+class Channel;
 class Result;
 
 class Session {
@@ -33,30 +34,6 @@ private:
 };
 
 #endif
-
-
-#ifndef _SSH_CHANNEL_HPP
-#define _SSH_CHANNEL_HPP
-
-/*
- * Simple wrapper for ssh_channel for
- * correct memory liberation a la c++.
-*/
-
-class Channel {
-public:
-    Channel(Session *session);
-    ~Channel();
-
-    ssh_channel get_c_channel();
-
-private:
-    Session *session;
-    ssh_channel c_channel = NULL;
-};
-
-#endif
-
 
 #ifndef _SSH_RESULT_HPP
 #define _SSH_RESULT_HPP

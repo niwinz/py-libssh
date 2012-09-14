@@ -7,6 +7,7 @@
 #include "bytes_converter.hpp"
 
 #include "ssh.hpp"
+#include "channel.hpp"
 #include "sftp.hpp"
 
 namespace py = boost::python;

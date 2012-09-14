@@ -13,10 +13,11 @@ objects:
 	$(CXX) -c -o .build/bytes.o bytes.cpp
 	$(CXX) -c -o .build/bytes_converter.o bytes_converter.cpp
 	$(CXX) -c -o .build/sftp.o sftp.cpp
+	$(CXX) -c -o .build/channel.o channel.cpp
 	$(CXX) -c -o .build/pyssh.o pyssh.cpp
 
 pyssh: objects
-	$(CXX) $(LDFLAGS) -o _pyssh.so .build/ssh.o .build/sftp.o .build/pyssh.o .build/bytes_converter.o .build/bytes.o
+	$(CXX) $(LDFLAGS) -o _pyssh.so .build/ssh.o .build/sftp.o .build/pyssh.o .build/bytes_converter.o .build/bytes.o .build/channel.o
 
 clean:
 	rm -rf .build
