@@ -8,6 +8,7 @@
 
 #include "ssh.hpp"
 #include "channel.hpp"
+#include "result.hpp"
 #include "sftp.hpp"
 
 namespace py = boost::python;

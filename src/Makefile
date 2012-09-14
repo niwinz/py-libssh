@@ -14,6 +14,7 @@ objects:
 	$(CXX) -c -o .build/bytes_converter.o bytes_converter.cpp
 	$(CXX) -c -o .build/sftp.o sftp.cpp
 	$(CXX) -c -o .build/channel.o channel.cpp
+	$(CXX) -c -o .build/result.o result.cpp
 	$(CXX) -c -o .build/pyssh.o pyssh.cpp
 
 pyssh: objects

@@ -2,10 +2,11 @@
 #include <stdexcept>
 #include <string>
 
-namespace pyssh {
-
 #ifndef _SSH_SESSION_HPP
 #define _SSH_SESSION_HPP
+
+
+namespace pyssh {
 
 class Channel;
 class Result;
@@ -33,31 +34,6 @@ private:
     std::string password;
 };
 
-#endif
-
-#ifndef _SSH_RESULT_HPP
-#define _SSH_RESULT_HPP
-
-/*
- * Command executrion result wrapper with treaming
- * api for transfer command output.
-*/
-
-class Result {
-public:
-    Result(Channel *channel);
-    ~Result();
-
-    std::string next();
-    int get_return_code();
-    bool is_finished();
-
-private:
-    Channel *channel;
-    bool finished = false;
-    int return_code = -1;
-};
-
-#endif
-
 } // End namespace
+
+#endif
