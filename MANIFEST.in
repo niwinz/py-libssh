@@ -1,0 +1,3 @@
+prune tests
+include build/_pyssh.so
+include src/*.cpp src/*.hpp src/*.txt
