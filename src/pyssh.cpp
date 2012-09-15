@@ -3,13 +3,14 @@
 #include <utility>
 #include <string>
 
-#include "bytes.hpp"
-#include "bytes_converter.hpp"
-
 #include "ssh.hpp"
 #include "channel.hpp"
 #include "result.hpp"
 #include "sftp.hpp"
+#include "sftp_wfile.hpp"
+
+#include "bytes.hpp"
+#include "bytes_converter.hpp"
 
 namespace py = boost::python;
 

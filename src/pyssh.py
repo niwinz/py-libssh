@@ -20,7 +20,7 @@ class Result(object):
 
         raise StopIteration
 
-    def __str__(self):
+    def __unicode__(self):
         return "".join(list(self))
 
     @property

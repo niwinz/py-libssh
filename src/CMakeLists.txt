@@ -34,6 +34,7 @@ SET(PYSSH_HEADERS
     #exception.hpp
     result.hpp
     sftp.hpp
+    sftp_wfile.hpp
     ssh.hpp
 )
 
@@ -45,6 +46,7 @@ SET(PYSSH_SOURCE
     #exception.cpp
     pyssh.cpp
     sftp.cpp
+    sftp_wfile.cpp
     ssh.cpp
 )
 
