@@ -55,6 +55,9 @@ class SftpFile(object):
     def seek(self, pos):
         return self._sftp_file.seek(pos)
 
+    def tell(self):
+        return self._sftp_file.tell();
+
     def close(self):
         return self._sftp_file.close()
 

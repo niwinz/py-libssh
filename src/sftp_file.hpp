@@ -23,6 +23,7 @@ public:
     Bytes read(int bytes=-1);
 
     bool seek(uint64_t new_offset);
+    uint64_t tell();
     void close();
 
 private:

@@ -51,6 +51,11 @@ SftpFile::seek(uint64_t new_offset) {
     else return false;
 }
 
+uint64_t
+SftpFile::tell() {
+    return sftp_tell64(this->file);
+}
+
 Bytes
 SftpFile::read(int bytes) {
     int buffer;

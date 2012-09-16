@@ -53,6 +53,7 @@ BOOST_PYTHON_MODULE(_pyssh) {
         .def("write", &pyssh::SftpFile::write)
         .def("read",  &pyssh::SftpFile::read)
         .def("close", &pyssh::SftpFile::close)
+        .def("tell", &pyssh::SftpFile::tell)
         .def("seek", &pyssh::SftpFile::seek);
 
     py::class_<pyssh::SftpSession>("SftpSession", py::init<pyssh::Session*>())
