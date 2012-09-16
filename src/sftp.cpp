@@ -4,7 +4,6 @@
 #include <cstring>
 
 #include "sftp.hpp"
-#include "sftp_wfile.hpp"
 #include "sftp_file.hpp"
 #include "ssh.hpp"
 
@@ -28,8 +27,6 @@ SftpSession::SftpSession(Session *session) {
 }
 
 SftpSession::~SftpSession() {
-    std::cout << "Destroing SftpSession" << std::endl;
-
     sftp_free(this->c_sftp_session);
     this->c_sftp_session = NULL;
 }
@@ -46,11 +43,6 @@ SftpSession::mkdir(const std::string &dirname) {
 sftp_session
 SftpSession::get_c_sftp_session() {
     return this->c_sftp_session;
-}
-
-SftpWFile*
-SftpSession::open_for_write(const std::string &path) {
-    return new SftpWFile(path, this);
 }
 
 SftpFile*
@@ -75,7 +67,7 @@ SftpSession::put(const std::string &_path, const std::string &remote_path) {
 
     file.seekg (0, std::ios::beg);
 
-    SftpWFile *sftp_file = new SftpWFile(remote_path, this);
+    SftpFile *sftp_file = new SftpFile(remote_path, std::string("w"), this);
 
     while (size > 0) {
         size = size - buffer_size;
@@ -87,7 +79,7 @@ SftpSession::put(const std::string &_path, const std::string &remote_path) {
         char *memblock = new char[get_size];
         file.read(memblock, get_size);
 
-        sftp_file->write(memblock, get_size);
+        sftp_file->_write(memblock, get_size);
         delete[] memblock;
     }
 

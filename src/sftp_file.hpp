@@ -20,14 +20,16 @@ public:
 
     void write(const Bytes &data);
 
-    Bytes read(size_t bytes);
-    Bytes read();
+    Bytes read(int bytes=-1);
 
     bool seek(uint64_t new_offset);
     void close();
 
 private:
     size_t parse_mode(const std::string &);
+    void _write(const char *data, const int &length);
+
+    friend SftpSession;
 
     sftp_file file = NULL;
     SftpSession *sftp_session;

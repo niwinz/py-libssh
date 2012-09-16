@@ -1,7 +1,16 @@
 from __future__ import print_function, unicode_literals
-import _pyssh
 
-class Result(object):
+import _pyssh
+import sys
+
+class UnicodeMixin(object):
+    if sys.version_info > (3, 0):
+        __str__ = lambda x: x.__unicode__()
+    else:
+        __str__ = lambda x: unicode(x).encode('utf-8')
+
+
+class Result(UnicodeMixin, object):
     """
     Python wrapper of ExecResult
     with iteration support.
@@ -35,6 +44,35 @@ class Result(object):
         return self.__next__()
 
 
+class SftpFile(object):
+    def __init__(self, _sftp_file):
+        self._sftp_file = _sftp_file
+
+    def write(self, data):
+        assert isinstance(data, bytes), "data must be a bytes instance"
+        return self._sftp_file.write(data)
+
+    def seek(self, pos):
+        return self._sftp_file.seek(pos)
+
+    def close(self):
+        return self._sftp_file.close()
+
+    def read(self, num=-1):
+        return self._sftp_file.read(num)
+
+
+class SftpSession(object):
+    def __init__(self, _sftp_session):
+        self._sftp_session = _sftp_session
+
+    def open(self, path, mode="w+"):
+        return SftpFile(self._sftp_session.open(path, mode))
+
+    def put(self, local_path, remote_path):
+        return self._sftp_session.put(local_path, remote_path)
+
+
 class Session(object):
     """
     Python wrapper for C++ Session.
@@ -48,6 +86,10 @@ class Session(object):
 
     def disconnect(self):
         self._session.disconnect()
+
+    def sftp_session(self):
+        return SftpSession(_pyssh.SftpSession(self._session))
+
 
 
 def connect(hostname="localhost", port=22):

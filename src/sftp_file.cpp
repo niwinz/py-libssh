@@ -25,8 +25,13 @@ SftpFile::~SftpFile() {
 
 void
 SftpFile::write(const Bytes &data) {
-    int nwritten = sftp_write(this->file, data.c_str(), data.size());
-    if (nwritten != data.size()) {
+    this->_write(data.c_str(), data.size());
+}
+
+void
+SftpFile::_write(const char *data, const int &length) {
+    int nwritten = sftp_write(this->file, data, length);
+    if (nwritten != length) {
         throw std::runtime_error("Can't write on file");
     }
 }
@@ -47,25 +52,19 @@ SftpFile::seek(uint64_t new_offset) {
 }
 
 Bytes
-SftpFile::read(size_t bytes) {
-    char *memblock = new char[bytes];
-    size_t readed = sftp_read(this->file, memblock,  bytes);
+SftpFile::read(int bytes) {
+    int buffer;
+
+    if (bytes <= 0) buffer = 1024;
+    else buffer = bytes;
+
+    char *memblock = new char[buffer];
+    size_t readed = sftp_read(this->file, memblock,  buffer);
 
     if (readed == 0) return Bytes("");
-    if (readed != bytes) throw std::runtime_error("error on read");
-    return Bytes(memblock);
-}
-
-Bytes
-SftpFile::read() {
-    char *memblock = new char[1024];
-    size_t readed = sftp_read(this->file, memblock,  1024);
-
-    if (readed == 0) return Bytes("");
-    if (readed != 1024) throw std::runtime_error("error on read");
+    if (bytes > 0) return Bytes(memblock);
 
     Bytes data(memblock);
-
     while(readed > 0) {
         readed = sftp_read(this->file, memblock,  1024);
         if (readed == 0) break;

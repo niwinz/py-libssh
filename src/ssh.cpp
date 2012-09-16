@@ -9,14 +9,15 @@
 
 namespace pyssh {
 
+Session::Session(): Session("localhost", 22) {}
+Session::Session(const std::string &hostname): Session(hostname, 22) {}
+
 Session::Session(const std::string &hostname, const int &port) {
     this->hostname = hostname;
     this->port = port;
 }
 
-Session::~Session() {
-    std::cout << "Destroying session" << std::endl;
-}
+Session::~Session() {}
 
 void
 Session::set_auth_data(const std::string &username, const std::string &password) {

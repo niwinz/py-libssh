@@ -13,7 +13,6 @@ Result::Result(Channel *channel) {
 }
 
 Result::~Result() {
-    std::cout << "Destroing ExecResult" << std::endl;
     delete this->channel;
 }
 

@@ -9,16 +9,13 @@ from os import mkdir, remove, chdir, getcwd
 from subprocess import Popen
 import sys, shutil
 
-
 class my_install_lib(install_lib):
     build_directory =  "build"
     current_path = getcwd()
 
     def install(self):
-        src_path = join(self.current_path, "src")
-
-        shutil.copy(join(src_path, "_pyssh.so"), join(self.install_dir, "_pyssh.so"))
-        shutil.copy(join(src_path, "pyssh.py"), join(self.install_dir, "pyssh.py"))
+        shutil.copy(join(self.current_path, self.build_dir, "_pyssh.so"), join(self.install_dir, "_pyssh.so"))
+        shutil.copy(join(self.current_path, self.build_dir, "pyssh.py"), join(self.install_dir, "pyssh.py"))
 
 
 class my_build_ext(build_ext):
@@ -41,7 +38,7 @@ class my_build_ext(build_ext):
         if ret_code != 0:
             sys.exit(ret_code)
 
-        shutil.copy(join(build_path, "_pyssh.so"), join(src_path, "_pyssh.so"))
+        shutil.copy(join(build_path, "_pyssh.so"), join(self.current_path,  self.build_lib))
 
     def build_extension(self, ext):
         return self.prepare_py_libssh()

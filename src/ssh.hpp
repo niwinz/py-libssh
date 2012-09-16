@@ -13,6 +13,8 @@ class Result;
 
 class Session {
 public:
+    Session();
+    Session(const std::string &hostname="localhost");
     Session(const std::string &hostname, const int &port);
     ~Session();
 
