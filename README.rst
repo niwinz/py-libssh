@@ -104,6 +104,9 @@ Represents a opened sftp remote file with random access support. This file only 
 ``pyssh.SftpFile.seek(pos)``
     Change position on the opened file.
 
+``pyssh.SftpFile.tell()``
+    Get current position on the opened file.
+
 ``pyssh.SftpFile.close()``
     Close the current file.
 
