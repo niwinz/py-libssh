@@ -111,3 +111,40 @@ Represents a opened sftp remote file with random access support. This file only 
     Close the current file.
 
 
+Examples
+--------
+
+Sftp session example.
+
+.. code-block:: python
+
+    >>> import pyssh
+    >>> session = pyssh.connect("localhost")
+    >>> sftp_session = session.sftp_session()
+    >>> f = sftp_session.open("/tmp/some-file", "w+")
+    >>> f.tell()
+    0
+    >>> f.write(b'Hello World')
+    >>> f.tell()
+    11
+    >>> f.seek(0)
+    True
+    >>> f.read(5)
+    b'Hello'
+    >>> f.read()
+    b' World'
+
+
+Command execution example.
+
+.. code-block:: python 
+
+    >>> import pyssh
+    >>> session = pyssh.connect("localhost")
+    >>> result = session.execute("uname -a")
+    >>> print(result)
+    Linux vaio.niwi.be 3.5.3-1-ARCH #1 SMP PREEMPT Sun Aug 26 09:14:51 CEST 2012 x86_64 GNU/Linux
+
+    >>> result.return_code
+    0
+
