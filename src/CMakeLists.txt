@@ -35,6 +35,7 @@ SET(PYSSH_HEADERS
     result.hpp
     sftp.hpp
     sftp_wfile.hpp
+    sftp_file.hpp
     ssh.hpp
 )
 
@@ -47,6 +48,7 @@ SET(PYSSH_SOURCE
     pyssh.cpp
     sftp.cpp
     sftp_wfile.cpp
+    sftp_file.cpp
     ssh.cpp
 )
 

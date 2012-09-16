@@ -1,5 +1,5 @@
-#ifndef _SSH_SFTP_FILE_HPP
-#define _SSH_SFTP_FILE_HPP
+#ifndef _SSH_SFTP_WFILE_HPP
+#define _SSH_SFTP_WFILE_HPP
 
 #include <libssh/sftp.h>
 

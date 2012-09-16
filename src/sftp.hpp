@@ -13,6 +13,7 @@ namespace pyssh {
 
 class Session;
 class SftpWFile;
+class SftpFile;
 
 class SftpSession {
 public:
@@ -23,6 +24,7 @@ public:
     void put(const std::string &, const std::string &);
 
     SftpWFile* open_for_write(const std::string &);
+    SftpFile* open(const std::string &, const std::string &);
 
     sftp_session get_c_sftp_session();
 

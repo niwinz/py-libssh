@@ -5,6 +5,7 @@
 
 #include "sftp.hpp"
 #include "sftp_wfile.hpp"
+#include "sftp_file.hpp"
 #include "ssh.hpp"
 
 namespace pyssh {
@@ -50,6 +51,11 @@ SftpSession::get_c_sftp_session() {
 SftpWFile*
 SftpSession::open_for_write(const std::string &path) {
     return new SftpWFile(path, this);
+}
+
+SftpFile*
+SftpSession::open(const std::string &path, const std::string &mode) {
+    return new SftpFile(path, mode, this);
 }
 
 void
