@@ -3,6 +3,8 @@
 #ifndef _SSH_RESULT_HPP
 #define _SSH_RESULT_HPP
 
+class Bytes;
+
 namespace pyssh {
 
 class Channel;
@@ -17,7 +19,7 @@ public:
     Result(Channel *channel);
     ~Result();
 
-    std::string next();
+    Bytes next();
     int get_return_code();
     bool is_finished();
 

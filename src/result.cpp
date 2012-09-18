@@ -1,9 +1,11 @@
 #include <string>
+#include <cstring>
 #include <stdexcept>
 #include <iostream>
 
 #include "channel.hpp"
 #include "result.hpp"
+#include "bytes.hpp"
 
 namespace pyssh {
 
@@ -16,23 +18,23 @@ Result::~Result() {
     delete this->channel;
 }
 
-std::string
+Bytes
 Result::next() {
     if (this->finished) {
-        return std::string("");
+        return Bytes("");
     }
 
-    char buffer[1024];
+    char buffer[10];
     int nbytes = ssh_channel_read(channel->get_c_channel(), buffer, sizeof(buffer), 0);
 
     if (nbytes > 0) {
-        return std::string(buffer);
+        return Bytes(buffer, nbytes);
     } else {
         ssh_channel_send_eof(channel->get_c_channel());
 
         this->finished = true;
         this->return_code = ssh_channel_get_exit_status(channel->get_c_channel());
-        return std::string("");
+        return Bytes("");
     }
 }
 

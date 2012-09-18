@@ -3,18 +3,14 @@ from __future__ import print_function, unicode_literals
 import _pyssh
 import sys
 
-class UnicodeMixin(object):
-    if sys.version_info > (3, 0):
-        __str__ = lambda x: x.__unicode__()
-    else:
-        __str__ = lambda x: unicode(x).encode('utf-8')
 
-
-class Result(UnicodeMixin, object):
+class Result(object):
     """
     Python wrapper of ExecResult
     with iteration support.
     """
+    _in_iteration = False
+    _cached_result = b""
 
     def __init__(self, _result):
         self._result = _result
@@ -23,14 +19,23 @@ class Result(UnicodeMixin, object):
         return self
 
     def __next__(self):
+        self._in_iteration = True
         data = self._result.next()
         if data:
+            self._cached_result += data
             return data
 
+        self._in_iteration = False
         raise StopIteration
 
-    def __unicode__(self):
-        return "".join(list(self))
+    def as_bytes(self):
+        if self._in_iteration and not self._finished:
+            raise RuntimeError("Current result is used by iterator.")
+
+        return b"".join(list(self))
+
+    def as_str(self, encoding="utf-8"):
+        return self.as_bytes().decode(encoding)
 
     @property
     def return_code(self):

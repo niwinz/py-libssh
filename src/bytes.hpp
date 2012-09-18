@@ -9,6 +9,7 @@ public:
     Bytes();
     Bytes(const std::string &data);
     Bytes(const Bytes &data);
+    Bytes(const char *data, size_t n);
 };
 
 # endif

@@ -67,15 +67,13 @@ SftpFile::read(int bytes) {
     size_t readed = sftp_read(this->file, memblock,  buffer);
 
     if (readed == 0) return Bytes("");
-    if (bytes > 0) return Bytes(memblock);
+    if (bytes > 0) return Bytes(memblock, readed);
 
-    Bytes data(memblock);
+    Bytes data(memblock, readed);
     while(readed > 0) {
         readed = sftp_read(this->file, memblock,  1024);
         if (readed == 0) break;
-        if (readed != 1024) throw std::runtime_error("error on read");
-
-        data.append(memblock);
+        else data.append(memblock, readed);
     }
 
     return data;
