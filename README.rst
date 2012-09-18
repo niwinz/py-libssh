@@ -38,9 +38,9 @@ Api reference:
 --------------
 
 
-`pyssh.connect(hostname="localhost", port=22)`
+`pyssh.connect(hostname="localhost", port=22, username=None, password=None)`
     Creates ssh session and connects to corresponding host and port. By default intent autenticate with local pubkey.
-    (TODO: can authenticate with password)
+    If passwrod and username are provided, normal user and password authentication is executed instead of a pubkey.
 
     This returns ``pyssh.Session`` instance.
 
@@ -71,11 +71,11 @@ Represents a result of execution of command on ssh session. Result by default, d
 ``pyssh.Result.return_code``
     Command execution return code. Only avaliable over all iteration.
 
-``pyssh.Result.__str__()``
-    Iterate over all content and return one unified string containing all command execution output. 
+``pyssh.Result.as_str()``
+    Return unicode string of all command execution output.
 
-``pyssh.Result.__unicode__()``
-    Same as that, ``__str__()`` but used in python2.
+``pyssh.Result.as_bytes()``
+    Same as that, ``as_str()`` but returns a bytes.
 
 
 ``pyssh.SftpSession``
