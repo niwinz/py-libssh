@@ -20,7 +20,7 @@ Session::Session(const std::string &hostname, const int &port) {
 Session::~Session() {}
 
 void
-Session::set_auth_data(const std::string &username, const std::string &password) {
+Session::auth(const std::string &username, const std::string &password) {
     this->username = username;
     this->password = password;
     this->password_auth = true;

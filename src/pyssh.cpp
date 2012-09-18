@@ -14,33 +14,12 @@
 
 namespace py = boost::python;
 
-pyssh::Session* _connect_1(const std::string &hostname, const int &port) {
-    pyssh::Session *session =  new pyssh::Session(hostname, port);
-    session->connect();
-    return session;
-}
-
-pyssh::Session* _connect_2(const std::string &hostname) {
-    pyssh::Session *session =  new pyssh::Session(hostname, 22);
-    session->connect();
-    return session;
-}
-
-pyssh::Session* _connect_3() {
-    pyssh::Session *session =  new pyssh::Session("localhost", 22);
-    session->connect();
-    return session;
-}
-
-
 BOOST_PYTHON_MODULE(_pyssh) {
     init_bytes_module_converter();
 
-    py::def("connect", &_connect_1, py::return_value_policy<py::manage_new_object>());
-    py::def("connect", &_connect_2, py::return_value_policy<py::manage_new_object>());
-    py::def("connect", &_connect_3, py::return_value_policy<py::manage_new_object>());
-
-    py::class_<pyssh::Session>("Session", py::no_init)
+    py::class_<pyssh::Session>("Session", py::init<const std::string &, const int &>())
+        .def("auth", &pyssh::Session::auth)
+        .def("connect", &pyssh::Session::connect)
         .def("disconnect", &pyssh::Session::disconnect)
         .def("execute", &pyssh::Session::execute, py::return_value_policy<py::manage_new_object>());
 

@@ -99,7 +99,9 @@ class Session(object):
         return SftpSession(_pyssh.SftpSession(self._session))
 
 
-
-def connect(hostname="localhost", port=22):
-    _session = _pyssh.connect(hostname, port)
+def connect(hostname="localhost", port=22, username=None, password=None):
+    _session = _pyssh.Session(hostname, port)
+    if username is not None and password is not None:
+        _session.auth(username, password)
+    _session.connect()
     return Session(_session)

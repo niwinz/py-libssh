@@ -18,7 +18,7 @@ public:
     Session(const std::string &hostname, const int &port);
     ~Session();
 
-    void set_auth_data(const std::string &username, const std::string &password);
+    void auth(const std::string &username, const std::string &password);
     void connect();
     void disconnect();
 
