@@ -1,10 +1,10 @@
-#include <libssh/libssh.h>
-#include <stdexcept>
-#include <string>
-
 #ifndef _SSH_SESSION_HPP
 #define _SSH_SESSION_HPP
 
+#include <boost/shared_ptr.hpp>
+#include <libssh/libssh.h>
+#include <stdexcept>
+#include <string>
 
 namespace pyssh {
 
@@ -22,7 +22,6 @@ public:
     void connect();
     void disconnect();
 
-    Result* execute(const std::string &command);
     ssh_session get_c_session();
 
 private:

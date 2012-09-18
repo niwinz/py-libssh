@@ -10,12 +10,14 @@
 namespace pyssh {
 
 
-Result::Result(Channel *channel) {
+Result::Result(boost::shared_ptr<Channel> channel) {
     this->channel = channel;
 }
 
 Result::~Result() {
-    delete this->channel;
+#ifndef NDEBUG
+    std::cout << "Destroing Result" << std::endl;
+#endif
 }
 
 Bytes

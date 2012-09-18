@@ -90,7 +90,7 @@ class Session(object):
         self._session = _session
 
     def execute(self, command):
-        return Result(self._session.execute(command))
+        return Result(_pyssh.execute(command, self._session))
 
     def disconnect(self):
         self._session.disconnect()
@@ -100,7 +100,7 @@ class Session(object):
 
 
 def connect(hostname="localhost", port=22, username=None, password=None):
-    _session = _pyssh.Session(hostname, port)
+    _session = _pyssh.create_session(hostname, port)
     if username is not None and password is not None:
         _session.auth(username, password)
     _session.connect()

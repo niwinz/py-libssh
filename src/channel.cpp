@@ -3,7 +3,7 @@
 
 namespace pyssh {
 
-Channel::Channel(Session *session) {
+Channel::Channel(boost::shared_ptr<Session> session) {
     this->session = session;
     this->c_channel = ssh_channel_new(session->get_c_session());
 
@@ -14,6 +14,9 @@ Channel::Channel(Session *session) {
 }
 
 Channel::~Channel() {
+#ifndef NDEBUG
+    std::cout << "Destroing Channel" << std::endl;
+#endif
     if (this->c_channel != NULL)
         ssh_channel_free(this->c_channel);
 }

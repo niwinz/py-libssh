@@ -17,7 +17,12 @@ Session::Session(const std::string &hostname, const int &port) {
     this->port = port;
 }
 
-Session::~Session() {}
+Session::~Session() {
+#ifndef NDEBUG
+    std::cout << "Destroing Session" << std::endl;
+#endif
+    ssh_disconnect(this->c_session);
+}
 
 void
 Session::auth(const std::string &username, const std::string &password) {
@@ -68,7 +73,7 @@ Session::connect() {
 
 void
 Session::disconnect() {
-    ssh_disconnect(this->c_session);
+    delete this;
 }
 
 ssh_session
@@ -76,21 +81,5 @@ Session::get_c_session() {
     return this->c_session;
 }
 
-/*
- * Standard method for executing small comamands.
-*/
-
-Result*
-Session::execute(const std::string &command) {
-    Channel *channel = new Channel(this);
-
-    int rc = ssh_channel_request_exec(channel->get_c_channel(), command.c_str());
-    if (rc != SSH_OK) {
-        fprintf(stderr, "Error connecting to localhost: %s\n", ssh_get_error(this->c_session));
-        throw std::runtime_error("Cannot execute command");
-    }
-
-    return new Result(channel);
-}
 
 } // End namespace

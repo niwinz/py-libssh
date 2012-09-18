@@ -12,6 +12,8 @@ Dependences:
 * libssh >= 0.5
 * cmake >= 2.8 (build only)
 
+And C++11 ready compiller. Tested with GCC == 4.7.1 and Clang++ == 3.1.
+
 **NOTE**: python 2 is not tested.
 
 
@@ -30,7 +32,7 @@ For development, go to repo root directory and execute these commands::
 
 
 For normal use, you can use a standard python distutils ``setup.py`` file::
-    
+
     python setup.py install
 
 
