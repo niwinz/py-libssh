@@ -6,6 +6,7 @@
 #include <fcntl.h>
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
+#include <boost/shared_ptr.hpp>
 
 class Bytes;
 
@@ -16,19 +17,20 @@ class SftpFile;
 
 class SftpSession {
 public:
-    SftpSession(Session *session);
+    //SftpSession(Session *session);
+    SftpSession(boost::shared_ptr<Session> s);
     ~SftpSession();
 
     void mkdir(const std::string &);
     void put(const std::string &, const std::string &);
 
-    SftpFile* open(const std::string &, const std::string &);
+    boost::shared_ptr<SftpFile> open(const std::string &, const std::string &);
 
     sftp_session get_c_sftp_session();
 
 private:
     sftp_session c_sftp_session = NULL;
-    Session *session;
+    boost::shared_ptr<Session> session;
 };
 
 #endif

@@ -10,8 +10,8 @@
 namespace pyssh {
 namespace fs = boost::filesystem;
 
-SftpSession::SftpSession(Session *session) {
-    this->session = session;
+SftpSession::SftpSession(boost::shared_ptr<Session> s) {
+    this->session = s;
     this->c_sftp_session = sftp_new(session->get_c_session());
 
     if (this->c_sftp_session == NULL) {
@@ -27,6 +27,9 @@ SftpSession::SftpSession(Session *session) {
 }
 
 SftpSession::~SftpSession() {
+#ifndef NDEBUG
+    std::cout << "Destroing SftpSession" << std::endl;
+#endif
     sftp_free(this->c_sftp_session);
     this->c_sftp_session = NULL;
 }
@@ -45,9 +48,12 @@ SftpSession::get_c_sftp_session() {
     return this->c_sftp_session;
 }
 
-SftpFile*
+boost::shared_ptr<SftpFile>
 SftpSession::open(const std::string &path, const std::string &mode) {
-    return new SftpFile(path, mode, this);
+    boost::shared_ptr<SftpSession> sftp_session_ptr;
+    sftp_session_ptr.reset(this);
+
+    return boost::shared_ptr<SftpFile>(new SftpFile(path, mode, sftp_session_ptr));
 }
 
 void
@@ -67,7 +73,10 @@ SftpSession::put(const std::string &_path, const std::string &remote_path) {
 
     file.seekg (0, std::ios::beg);
 
-    SftpFile *sftp_file = new SftpFile(remote_path, std::string("w"), this);
+    boost::shared_ptr<SftpSession> sftp_session_ptr;
+    sftp_session_ptr.reset(this);
+
+    boost::shared_ptr<SftpFile> sftp_file(new SftpFile(remote_path, std::string("w"), sftp_session_ptr));
 
     while (size > 0) {
         size = size - buffer_size;
@@ -85,7 +94,6 @@ SftpSession::put(const std::string &_path, const std::string &remote_path) {
 
     file.close();
     sftp_file->close();
-    delete sftp_file;
 }
 
 }

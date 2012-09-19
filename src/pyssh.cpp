@@ -1,6 +1,7 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/python.hpp>
 #include <utility>
+
 #include <string>
 
 #include "ssh.hpp"
@@ -14,29 +15,56 @@
 
 namespace py = boost::python;
 
+
+boost::shared_ptr<pyssh::Session>
+new_session(const std::string &host, const int &port) {
+    boost::shared_ptr<pyssh::Session> session_ptr(new pyssh::Session(host, port));
+    return session_ptr;
+}
+
+boost::shared_ptr<pyssh::Result>
+execute(const std::string &command, boost::shared_ptr<pyssh::Session> session_ptr) {
+    boost::shared_ptr<pyssh::Channel> channel(new pyssh::Channel(session_ptr));
+
+    int rc = ssh_channel_request_exec(channel->get_c_channel(), command.c_str());
+    if (rc != SSH_OK) {
+        fprintf(stderr, "Error connecting to localhost: %s\n", ssh_get_error(session_ptr->get_c_session()));
+        throw std::runtime_error("Cannot execute command");
+    }
+
+    return boost::shared_ptr<pyssh::Result>(new pyssh::Result(channel));
+}
+
 BOOST_PYTHON_MODULE(_pyssh) {
     init_bytes_module_converter();
 
-    py::class_<pyssh::Session>("Session", py::init<const std::string &, const int &>())
+    py::def("create_session", &new_session, py::return_value_policy<py::return_by_value>());
+    py::def("execute", &execute, py::return_value_policy<py::return_by_value>());
+
+    py::class_<pyssh::Session, boost::noncopyable>("Session", py::no_init)
         .def("auth", &pyssh::Session::auth)
         .def("connect", &pyssh::Session::connect)
-        .def("disconnect", &pyssh::Session::disconnect)
-        .def("execute", &pyssh::Session::execute, py::return_value_policy<py::manage_new_object>());
+        .def("disconnect", &pyssh::Session::disconnect);
 
-    py::class_<pyssh::Result>("Result", py::no_init)
+    py::class_<pyssh::Result, boost::noncopyable>("Result", py::no_init)
         .def("next", &pyssh::Result::next)
         .add_property("return_code", &pyssh::Result::get_return_code)
         .add_property("is_finished", &pyssh::Result::is_finished);
 
-    py::class_<pyssh::SftpFile>("SftpFile", py::no_init)
+    py::class_<pyssh::SftpFile, boost::noncopyable>("SftpFile", py::no_init)
         .def("write", &pyssh::SftpFile::write)
         .def("read",  &pyssh::SftpFile::read)
         .def("close", &pyssh::SftpFile::close)
         .def("tell", &pyssh::SftpFile::tell)
         .def("seek", &pyssh::SftpFile::seek);
 
-    py::class_<pyssh::SftpSession>("SftpSession", py::init<pyssh::Session*>())
+    py::class_<pyssh::SftpSession>("SftpSession", py::init< boost::shared_ptr<pyssh::Session> >())
         .def("mkdir", &pyssh::SftpSession::mkdir)
         .def("put", &pyssh::SftpSession::put)
-        .def("open", &pyssh::SftpSession::open, py::return_value_policy<py::manage_new_object>());
+        .def("open", &pyssh::SftpSession::open);
+
+    py::register_ptr_to_python< boost::shared_ptr<pyssh::Session> >();
+    py::register_ptr_to_python< boost::shared_ptr<pyssh::Result> >();
+    py::register_ptr_to_python< boost::shared_ptr<pyssh::SftpSession> >();
+    py::register_ptr_to_python< boost::shared_ptr<pyssh::SftpFile> >();
 }

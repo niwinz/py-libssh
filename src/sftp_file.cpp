@@ -4,8 +4,9 @@
 
 namespace pyssh {
 
-SftpFile::SftpFile(const std::string &filepath, const std::string &mode, SftpSession *sftp_session) {
-    this->sftp_session = sftp_session;
+SftpFile::SftpFile(const std::string &filepath, const std::string &mode,
+            boost::shared_ptr<SftpSession> sftp_session_ptr) {
+    this->sftp_session = sftp_session_ptr;
 
     size_t access_type = this->parse_mode(mode);
     this->file = sftp_open(this->sftp_session->get_c_sftp_session(), filepath.c_str(), access_type, S_IRWXU);
@@ -16,11 +17,13 @@ SftpFile::SftpFile(const std::string &filepath, const std::string &mode, SftpSes
 }
 
 SftpFile::~SftpFile() {
+#ifndef NDEBUG
+    std::cout << "Destroing SftpFile" << std::endl;
+#endif
     if (this->file != NULL) {
         sftp_close(this->file);
         this->file = NULL;
     }
-    this->sftp_session = NULL;
 }
 
 void

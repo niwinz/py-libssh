@@ -3,6 +3,7 @@
 
 #include <string>
 #include <libssh/sftp.h>
+#include <boost/shared_ptr.hpp>
 
 
 class Bytes;
@@ -15,7 +16,8 @@ class Session;
 
 class SftpFile {
 public:
-    SftpFile(const std::string &filepath, const std::string &mode, SftpSession *sftp_session);
+    SftpFile(const std::string &filepath, const std::string &mode,
+        boost::shared_ptr<SftpSession> sftp_session_ptr);
     ~SftpFile();
 
     void write(const Bytes &data);
@@ -33,8 +35,7 @@ private:
     friend SftpSession;
 
     sftp_file file = NULL;
-    SftpSession *sftp_session;
-    Session *session;
+    boost::shared_ptr<SftpSession> sftp_session;
 };
 
 }

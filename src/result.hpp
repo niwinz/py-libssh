@@ -1,7 +1,8 @@
-#include <libssh/libssh.h>
-
 #ifndef _SSH_RESULT_HPP
 #define _SSH_RESULT_HPP
+
+#include <libssh/libssh.h>
+#include <boost/shared_ptr.hpp>
 
 class Bytes;
 
@@ -16,7 +17,7 @@ class Channel;
 
 class Result {
 public:
-    Result(Channel *channel);
+    Result(boost::shared_ptr<Channel> channel);
     ~Result();
 
     Bytes next();
@@ -24,7 +25,7 @@ public:
     bool is_finished();
 
 private:
-    Channel *channel;
+    boost::shared_ptr<Channel> channel;
     bool finished = false;
     int return_code = -1;
 };
