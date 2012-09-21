@@ -1,5 +1,5 @@
-#include "ssh.hpp"
 #include "channel.hpp"
+#include "ssh.hpp"
 
 namespace pyssh {
 
@@ -17,8 +17,10 @@ Channel::~Channel() {
 #ifndef NDEBUG
     std::cout << "Destroing Channel" << std::endl;
 #endif
-    if (this->c_channel != NULL)
-        ssh_channel_free(this->c_channel);
+    // Not need free the channel because session free its.
+    //if (ssh_channel_is_closed(this->c_channel) == 0) {
+    //    ssh_channel_free(this->c_channel);
+    //}
 }
 
 ssh_channel

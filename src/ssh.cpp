@@ -21,7 +21,10 @@ Session::~Session() {
 #ifndef NDEBUG
     std::cout << "Destroing Session" << std::endl;
 #endif
-    ssh_disconnect(this->c_session);
+    if (ssh_is_connected(this->c_session)) {
+        ssh_disconnect(this->c_session);
+        this->c_session = NULL;
+    }
 }
 
 void
@@ -73,7 +76,11 @@ Session::connect() {
 
 void
 Session::disconnect() {
-    delete this;
+    if (ssh_is_connected(this->c_session)) {
+        ssh_disconnect(this->c_session);
+    } else {
+        throw std::runtime_error("Session not connected");
+    }
 }
 
 ssh_session

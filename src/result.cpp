@@ -22,8 +22,11 @@ Result::~Result() {
 
 Bytes
 Result::next() {
-    if (this->finished) {
-        return Bytes("");
+    if (this->finished) return Bytes("");
+
+    int status = ssh_channel_is_closed(channel->get_c_channel());
+    if (status != 0) {
+        throw std::runtime_error("Channel is closed");
     }
 
     char buffer[10];
