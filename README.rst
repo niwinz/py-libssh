@@ -142,11 +142,9 @@ Command execution example.
 .. code-block:: python 
 
     >>> import pyssh
-    >>> session = pyssh.connect("localhost")
-    >>> result = session.execute("uname -a")
-    >>> print(result)
-    Linux vaio.niwi.be 3.5.3-1-ARCH #1 SMP PREEMPT Sun Aug 26 09:14:51 CEST 2012 x86_64 GNU/Linux
-
-    >>> result.return_code
+    >>> s = pyssh.connect()
+    >>> r = s.execute("uname -a")
+    >>> r.as_bytes()
+    b'Linux vaio.niwi.be 3.5.3-1-ARCH #1 SMP PREEMPT Sun Aug 26 09:14:51 CEST 2012 x86_64 GNU/Linux\n'
+    >>> r.return_code
     0
-
