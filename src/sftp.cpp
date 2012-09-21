@@ -63,20 +63,21 @@ SftpSession::put(const std::string &_path, const std::string &remote_path) {
         throw std::runtime_error("Incorrect or not existent file");
     }
 
-    fs::ifstream file(p, std::ios::in|std::ios::binary|std::ios::ate);
-    if (!file.is_open()) {
+    fs::ifstream local_file(p, std::ios::in|std::ios::binary|std::ios::ate);
+    if (!local_file.is_open()) {
         throw std::runtime_error("Cannot open file");
     }
 
     int buffer_size = 10;
-    int size = (int) file.tellg();
+    int size = (int) local_file.tellg();
 
-    file.seekg (0, std::ios::beg);
+    local_file.seekg(0, std::ios::beg);
 
-    boost::shared_ptr<SftpSession> sftp_session_ptr;
-    sftp_session_ptr.reset(this);
-
-    boost::shared_ptr<SftpFile> sftp_file(new SftpFile(remote_path, std::string("w"), sftp_session_ptr));
+    int access_type = O_WRONLY | O_TRUNC | O_CREAT;
+    sftp_file remote_file = sftp_open(this->get_c_sftp_session(), remote_path.c_str(), access_type, S_IRWXU);
+    if (remote_file == NULL) {
+        throw std::runtime_error("Can't open file");
+    }
 
     while (size > 0) {
         size = size - buffer_size;
@@ -86,14 +87,18 @@ SftpSession::put(const std::string &_path, const std::string &remote_path) {
         else get_size = buffer_size + size;
 
         char *memblock = new char[get_size];
-        file.read(memblock, get_size);
+        local_file.read(memblock, get_size);
 
-        sftp_file->_write(memblock, get_size);
+        int nwritten = sftp_write(remote_file, memblock, get_size);
+        if (nwritten != get_size) {
+            throw std::runtime_error("Can't write on file");
+        }
+
         delete[] memblock;
     }
 
-    file.close();
-    sftp_file->close();
+    local_file.close();
+    sftp_close(remote_file);
 }
 
 }

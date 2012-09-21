@@ -4,6 +4,7 @@ import sys
 import shutil
 import unittest
 import importlib
+import hashlib
 
 
 class PythonLibsshTest(unittest.TestCase):
@@ -34,7 +35,27 @@ class PythonLibsshTest(unittest.TestCase):
         result = r.as_bytes()
         return_code = r.return_code
 
-        s.disconnect()
-
         self.assertEqual(return_code, 0)
         self.assertEqual(result, b"Linux\n")
+
+    def test_connect_and_put(self):
+        sha1_1 = hashlib.sha1()
+        with io.open("/tmp/py-libssh.temp.file.2", "wb") as f:
+            data = b"FOOOO" * 20
+            sha1_1.update(data)
+            f.write(data)
+
+        session = self.pyssh.connect()
+        sftp = session.sftp_session()
+        sftp.put("/tmp/py-libssh.temp.file.2", "/tmp/py-libssh.temp.file.3")
+
+        self.assertTrue(os.path.exists("/tmp/py-libssh.temp.file.3"))
+
+        sha1_2 = hashlib.sha1()
+        with io.open("/tmp/py-libssh.temp.file.3", "rb") as f:
+            sha1_2.update(f.read())
+
+        self.assertEqual(sha1_2.hexdigest(), sha1_1.hexdigest())
+
+        os.remove("/tmp/py-libssh.temp.file.2")
+        os.remove("/tmp/py-libssh.temp.file.3")
