@@ -55,6 +55,22 @@ setup(
     package_dir = {'': 'src'},
     py_modules = ['pyssh'],
     cmdclass=dict(build_ext=my_build_ext, install_lib=my_install_lib),
-
     ext_modules=[Extension('_pyssh', [])],
+
+    classifiers = [
+        "Development Status :: 4 - Beta",
+        "Topic :: System :: Systems Administration",
+        "Operating System :: POSIX",
+        "Operating System :: POSIX :: BSD :: FreeBSD",
+        "Operating System :: POSIX :: BSD :: NetBSD",
+        "Operating System :: POSIX :: Linux",
+        "Programming Language :: C++",
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 2.7",
+        "Programming Language :: Python :: 3.2",
+        "Programming Language :: Python :: 3.3",
+        "Programming Language :: Python :: Implementation :: CPython",
+        "Intended Audience :: Developers",
+        "License :: OSI Approved :: BSD License",
+    ]
 )
