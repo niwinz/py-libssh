@@ -24,8 +24,6 @@ public:
     void mkdir(const std::string &);
     void put(const std::string &, const std::string &);
 
-    boost::shared_ptr<SftpFile> open(const std::string &, const std::string &);
-
     sftp_session get_c_sftp_session();
 
 private:

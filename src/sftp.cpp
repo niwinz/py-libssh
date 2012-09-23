@@ -48,13 +48,6 @@ SftpSession::get_c_sftp_session() {
     return this->c_sftp_session;
 }
 
-boost::shared_ptr<SftpFile>
-SftpSession::open(const std::string &path, const std::string &mode) {
-    boost::shared_ptr<SftpSession> sftp_session_ptr;
-    sftp_session_ptr.reset(this);
-
-    return boost::shared_ptr<SftpFile>(new SftpFile(path, mode, sftp_session_ptr));
-}
 
 void
 SftpSession::put(const std::string &_path, const std::string &remote_path) {

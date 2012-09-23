@@ -59,3 +59,9 @@ class PythonLibsshTest(unittest.TestCase):
 
         os.remove("/tmp/py-libssh.temp.file.2")
         os.remove("/tmp/py-libssh.temp.file.3")
+
+    def test_read_remote_file(self):
+        session = self.pyssh.connect()
+        sftp = session.sftp_session()
+        f = sftp.open("/tmp/py-libssh.temp.file", "r")
+        self.assertEqual(b"aaaaaaaaa\n", f.read(10))

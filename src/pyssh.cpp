@@ -35,11 +35,17 @@ execute(const std::string &command, boost::shared_ptr<pyssh::Session> session_pt
     return boost::shared_ptr<pyssh::Result>(new pyssh::Result(channel));
 }
 
+boost::shared_ptr<pyssh::SftpFile>
+open_file(const std::string &path, const std::string &mode, boost::shared_ptr<pyssh::SftpSession> sftp_session_ptr) {
+    return boost::shared_ptr<pyssh::SftpFile>(new pyssh::SftpFile(path, mode, sftp_session_ptr));
+}
+
 BOOST_PYTHON_MODULE(_pyssh) {
     init_bytes_module_converter();
 
     py::def("create_session", &new_session, py::return_value_policy<py::return_by_value>());
     py::def("execute", &execute, py::return_value_policy<py::return_by_value>());
+    py::def("open_file", &open_file, py::return_value_policy<py::return_by_value>());
 
     py::class_<pyssh::Session, boost::noncopyable>("Session", py::no_init)
         .def("auth", &pyssh::Session::auth)
@@ -60,8 +66,7 @@ BOOST_PYTHON_MODULE(_pyssh) {
 
     py::class_<pyssh::SftpSession>("SftpSession", py::init< boost::shared_ptr<pyssh::Session> >())
         .def("mkdir", &pyssh::SftpSession::mkdir)
-        .def("put", &pyssh::SftpSession::put)
-        .def("open", &pyssh::SftpSession::open);
+        .def("put", &pyssh::SftpSession::put);
 
     py::register_ptr_to_python< boost::shared_ptr<pyssh::Session> >();
     py::register_ptr_to_python< boost::shared_ptr<pyssh::Result> >();

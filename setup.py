@@ -30,7 +30,7 @@ class my_build_ext(build_ext):
             mkdir(build_path)
 
         chdir(build_path)
-        ret_code = Popen(["cmake", src_path]).wait()
+        ret_code = Popen(["cmake", "-DCMAKE_BUILD_TYPE=Release", src_path]).wait()
         if ret_code != 0:
             sys.exit(ret_code)
 
