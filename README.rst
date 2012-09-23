@@ -54,9 +54,6 @@ Represents a ssh connection.
 ``pyssh.Session.execute(command)``
     Executes some command on a remote machine. Returns ``pyssh.Result`` instance.
 
-``pyssh.Session.sftp_session()``
-    Open a sftp session on top of current ssh session. Return a ``pyssh.SftpSession`` instance.
-
 
 ``pyssh.Result``
 ^^^^^^^^^^^^^^^^
@@ -79,7 +76,7 @@ Represents a result of execution of command on ssh session. Result by default, d
     Same as that, ``as_str()`` but returns a bytes.
 
 
-``pyssh.SftpSession``
+``pyssh.Sftp``
 ^^^^^^^^^^^^^^^^^^^^^
 
 Represents a sftp connection.
