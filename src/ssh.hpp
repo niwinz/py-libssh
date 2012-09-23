@@ -18,6 +18,9 @@ public:
     Session(const std::string &hostname, const int &port);
     ~Session();
 
+    static boost::shared_ptr<Session> create(const std::string &host, const int &port);
+    static boost::shared_ptr<Result> execute(const std::string &command, boost::shared_ptr<Session> session_ptr);
+
     void auth(const std::string &username, const std::string &password);
     void connect();
     void disconnect();
@@ -35,8 +38,6 @@ private:
     std::string password;
 };
 
-boost::shared_ptr<Result> session_execute(const std::string &command, boost::shared_ptr<Session> session_ptr);
-boost::shared_ptr<Session> create_session(const std::string &host, const int &port);
 
 } // End namespace
 

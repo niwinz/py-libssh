@@ -16,8 +16,8 @@ namespace py = boost::python;
 BOOST_PYTHON_MODULE(_pyssh) {
     init_bytes_module_converter();
 
-    py::def("create_session", &pyssh::create_session, py::return_value_policy<py::return_by_value>());
-    py::def("session_execute", &pyssh::session_execute, py::return_value_policy<py::return_by_value>());
+    py::def("create_session", &pyssh::Session::create, py::return_value_policy<py::return_by_value>());
+    py::def("session_execute", &pyssh::Session::execute, py::return_value_policy<py::return_by_value>());
     py::def("sftp_open_file", &pyssh::sftp_open_file, py::return_value_policy<py::return_by_value>());
 
     py::class_<pyssh::Session, boost::noncopyable>("Session", py::no_init)

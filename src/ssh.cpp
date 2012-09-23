@@ -91,7 +91,7 @@ Session::get_c_session() {
 /* Not member functions */
 
 boost::shared_ptr<Result>
-session_execute(const std::string &command, boost::shared_ptr<Session> session_ptr) {
+Session::execute(const std::string &command, boost::shared_ptr<Session> session_ptr) {
     boost::shared_ptr<Channel> channel(new Channel(session_ptr));
 
     int rc = ssh_channel_request_exec(channel->get_c_channel(), command.c_str());
@@ -104,7 +104,7 @@ session_execute(const std::string &command, boost::shared_ptr<Session> session_p
 }
 
 boost::shared_ptr<Session>
-create_session(const std::string &host, const int &port) {
+Session::create(const std::string &host, const int &port) {
     boost::shared_ptr<Session> session_ptr(new Session(host, port));
     return session_ptr;
 }
