@@ -49,7 +49,7 @@ class Result(object):
         return self.__next__()
 
 
-class SftpFile(object):
+class File(object):
     def __init__(self, _sftp_file):
         self._sftp_file = _sftp_file
 
@@ -70,12 +70,16 @@ class SftpFile(object):
         return self._sftp_file.read(num)
 
 
-class SftpSession(object):
-    def __init__(self, _sftp_session):
-        self._sftp_session = _sftp_session
+class Sftp(object):
+    """
+    Python wrapper for C++ sftp session.
+    """
+
+    def __init__(self, session):
+        self._sftp_session = _pyssh.SftpSession(session._session)
 
     def open(self, path, mode="w+"):
-        return SftpFile(_pyssh.sftp_open_file(path, mode, self._sftp_session))
+        return File(_pyssh.sftp_open_file(path, mode, self._sftp_session))
 
     def put(self, local_path, remote_path):
         return self._sftp_session.put(local_path, remote_path)
@@ -95,11 +99,11 @@ class Session(object):
     def disconnect(self):
         self._session.disconnect()
 
-    def sftp_session(self):
-        return SftpSession(_pyssh.SftpSession(self._session))
-
 
 def connect(hostname="localhost", port=22, username=None, password=None):
+    """
+    Connect to corresponging hostname and return new Session instance.
+    """
     _session = _pyssh.create_session(hostname, port)
     if username is not None and password is not None:
         _session.auth(username, password)

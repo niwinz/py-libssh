@@ -46,7 +46,7 @@ class PythonLibsshTest(unittest.TestCase):
             f.write(data)
 
         session = self.pyssh.connect()
-        sftp = session.sftp_session()
+        sftp = self.pyssh.Sftp(session)
         sftp.put("/tmp/py-libssh.temp.file.2", "/tmp/py-libssh.temp.file.3")
 
         self.assertTrue(os.path.exists("/tmp/py-libssh.temp.file.3"))
@@ -62,6 +62,6 @@ class PythonLibsshTest(unittest.TestCase):
 
     def test_read_remote_file(self):
         session = self.pyssh.connect()
-        sftp = session.sftp_session()
+        sftp = self.pyssh.Sftp(session)
         f = sftp.open("/tmp/py-libssh.temp.file", "r")
         self.assertEqual(b"aaaaaaaaa\n", f.read(10))

@@ -8,13 +8,11 @@ With full streaming api.
 Dependences:
 
 * boost >= 1.50
-* python >=3.2
+* python >=3.2, 2.7
 * libssh >= 0.5
 * cmake >= 2.8 (build only)
 
-And C++11 ready compiller. Tested with GCC == 4.7.1 and Clang++ == 3.1.
-
-**NOTE**: python 2 is not tested.
+And C++11 ready compiller. Tested with g++(4.7.1) and clang++(3.1).
 
 
 How to build
@@ -45,6 +43,7 @@ Api reference:
     If passwrod and username are provided, normal user and password authentication is executed instead of a pubkey.
 
     This returns ``pyssh.Session`` instance.
+
 
 
 ``pyssh.Session``
@@ -85,31 +84,34 @@ Represents a result of execution of command on ssh session. Result by default, d
 
 Represents a sftp connection.
 
-``pyssh.SftpSession.put(local_path, remote_path)``
+``pyssh.Sftp.__init__(session)``
+    Creates a sftp session on top of ssh session (``pyssh.Session``).
+
+``pyssh.Sftp.put(local_path, remote_path)``
     Transfer local file to remote file.
 
-``pyssh.SftpSession.open(remote_path, mode="w+")``
-    Open remote file (with random access support). Mode can be: ``w`` (Write + Truncate), ``r`` (Read), ``w+`` (Write+Read+Truncate) and  ``r+`` (Read+Write). Returns ``pyssh.SftpFile`` instance.
+``pyssh.Sftp.open(remote_path, mode="w+")``
+    Open remote file (with random access support). Mode can be: ``w`` (Write + Truncate), ``r`` (Read), ``w+`` (Write+Read+Truncate) and  ``r+`` (Read+Write). Returns ``pyssh.File`` instance.
 
 
-``pyssh.SftpFile``
+``pyssh.File``
 ^^^^^^^^^^^^^^^^^^
 
 Represents a opened sftp remote file with random access support. This file only works with python3 bytes or python2 str types.
 
-``pyssh.SftpFile.write(data)``
+``pyssh.File.write(data)``
     Write bytestring to the opened file.
 
-``pyssh.SftpFile.read(num=-1)``
+``pyssh.File.read(num=-1)``
     Read content from the opened file. if num is -1, reads all content from current position to the end of file.
 
-``pyssh.SftpFile.seek(pos)``
+``pyssh.File.seek(pos)``
     Change position on the opened file.
 
-``pyssh.SftpFile.tell()``
+``pyssh.File.tell()``
     Get current position on the opened file.
 
-``pyssh.SftpFile.close()``
+``pyssh.File.close()``
     Close the current file.
 
 
@@ -122,8 +124,8 @@ Sftp session example.
 
     >>> import pyssh
     >>> session = pyssh.connect("localhost")
-    >>> sftp_session = session.sftp_session()
-    >>> f = sftp_session.open("/tmp/some-file", "w+")
+    >>> sftp = pyssh.Sftp(session)
+    >>> f = sftp.open("/tmp/some-file", "w+")
     >>> f.tell()
     0
     >>> f.write(b'Hello World')
