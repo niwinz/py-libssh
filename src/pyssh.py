@@ -75,7 +75,7 @@ class SftpSession(object):
         self._sftp_session = _sftp_session
 
     def open(self, path, mode="w+"):
-        return SftpFile(_pyssh.open_file(path, mode, self._sftp_session))
+        return SftpFile(_pyssh.sftp_open_file(path, mode, self._sftp_session))
 
     def put(self, local_path, remote_path):
         return self._sftp_session.put(local_path, remote_path)
@@ -90,7 +90,7 @@ class Session(object):
         self._session = _session
 
     def execute(self, command):
-        return Result(_pyssh.execute(command, self._session))
+        return Result(_pyssh.session_execute(command, self._session))
 
     def disconnect(self):
         self._session.disconnect()

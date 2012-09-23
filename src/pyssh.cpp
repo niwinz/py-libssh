@@ -1,7 +1,6 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/python.hpp>
 #include <utility>
-
 #include <string>
 
 #include "ssh.hpp"
@@ -9,43 +8,17 @@
 #include "result.hpp"
 #include "sftp.hpp"
 #include "sftp_file.hpp"
-
 #include "bytes.hpp"
 #include "bytes_converter.hpp"
 
 namespace py = boost::python;
 
-
-boost::shared_ptr<pyssh::Session>
-new_session(const std::string &host, const int &port) {
-    boost::shared_ptr<pyssh::Session> session_ptr(new pyssh::Session(host, port));
-    return session_ptr;
-}
-
-boost::shared_ptr<pyssh::Result>
-execute(const std::string &command, boost::shared_ptr<pyssh::Session> session_ptr) {
-    boost::shared_ptr<pyssh::Channel> channel(new pyssh::Channel(session_ptr));
-
-    int rc = ssh_channel_request_exec(channel->get_c_channel(), command.c_str());
-    if (rc != SSH_OK) {
-        fprintf(stderr, "Error connecting to localhost: %s\n", ssh_get_error(session_ptr->get_c_session()));
-        throw std::runtime_error("Cannot execute command");
-    }
-
-    return boost::shared_ptr<pyssh::Result>(new pyssh::Result(channel));
-}
-
-boost::shared_ptr<pyssh::SftpFile>
-open_file(const std::string &path, const std::string &mode, boost::shared_ptr<pyssh::SftpSession> sftp_session_ptr) {
-    return boost::shared_ptr<pyssh::SftpFile>(new pyssh::SftpFile(path, mode, sftp_session_ptr));
-}
-
 BOOST_PYTHON_MODULE(_pyssh) {
     init_bytes_module_converter();
 
-    py::def("create_session", &new_session, py::return_value_policy<py::return_by_value>());
-    py::def("execute", &execute, py::return_value_policy<py::return_by_value>());
-    py::def("open_file", &open_file, py::return_value_policy<py::return_by_value>());
+    py::def("create_session", &pyssh::create_session, py::return_value_policy<py::return_by_value>());
+    py::def("session_execute", &pyssh::session_execute, py::return_value_policy<py::return_by_value>());
+    py::def("sftp_open_file", &pyssh::sftp_open_file, py::return_value_policy<py::return_by_value>());
 
     py::class_<pyssh::Session, boost::noncopyable>("Session", py::no_init)
         .def("auth", &pyssh::Session::auth)

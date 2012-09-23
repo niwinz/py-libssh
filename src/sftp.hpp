@@ -31,6 +31,7 @@ private:
     boost::shared_ptr<Session> session;
 };
 
-#endif
+boost::shared_ptr<SftpFile> sftp_open_file(const std::string &path, const std::string &mode, boost::shared_ptr<SftpSession> sftp_session_ptr);
 
 }
+#endif

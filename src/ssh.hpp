@@ -35,6 +35,9 @@ private:
     std::string password;
 };
 
+boost::shared_ptr<Result> session_execute(const std::string &command, boost::shared_ptr<Session> session_ptr);
+boost::shared_ptr<Session> create_session(const std::string &host, const int &port);
+
 } // End namespace
 
 #endif

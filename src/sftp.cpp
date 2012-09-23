@@ -94,4 +94,10 @@ SftpSession::put(const std::string &_path, const std::string &remote_path) {
     sftp_close(remote_file);
 }
 
+
+boost::shared_ptr<SftpFile>
+sftp_open_file(const std::string &path, const std::string &mode, boost::shared_ptr<SftpSession> sftp_session_ptr) {
+    return boost::shared_ptr<SftpFile>(new SftpFile(path, mode, sftp_session_ptr));
+}
+
 }

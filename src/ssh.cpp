@@ -88,5 +88,25 @@ Session::get_c_session() {
     return this->c_session;
 }
 
+/* Not member functions */
+
+boost::shared_ptr<Result>
+session_execute(const std::string &command, boost::shared_ptr<Session> session_ptr) {
+    boost::shared_ptr<Channel> channel(new Channel(session_ptr));
+
+    int rc = ssh_channel_request_exec(channel->get_c_channel(), command.c_str());
+    if (rc != SSH_OK) {
+        fprintf(stderr, "Error connecting to localhost: %s\n", ssh_get_error(session_ptr->get_c_session()));
+        throw std::runtime_error("Cannot execute command");
+    }
+
+    return boost::shared_ptr<Result>(new Result(channel));
+}
+
+boost::shared_ptr<Session>
+create_session(const std::string &host, const int &port) {
+    boost::shared_ptr<Session> session_ptr(new Session(host, port));
+    return session_ptr;
+}
 
 } // End namespace
